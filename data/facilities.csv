@@ -1,0 +1,49 @@
+region,name,lat,lon,facility_type,attraction_size,prestige,servers,service_minutes,source_status
+Hong Kong,QMH,22.2706,114.1311,core,1700,0.95,6,10.0,illustrative_unverified
+Hong Kong,PYNEH,22.2693,114.2361,core,1600,0.9,6,10.0,illustrative_unverified
+Hong Kong,RTSKH,22.2758,114.1754,core,800,0.75,6,10.0,illustrative_unverified
+Hong Kong,QEH,22.3095,114.1751,core,2000,0.98,6,10.0,illustrative_unverified
+Hong Kong,KWH,22.3153,114.1722,core,1200,0.85,6,10.0,illustrative_unverified
+Hong Kong,PMH,22.3414,114.1341,core,1700,0.92,6,10.0,illustrative_unverified
+Hong Kong,CMC,22.3411,114.1531,core,1100,0.78,6,10.0,illustrative_unverified
+Hong Kong,UCH,22.3223,114.2278,core,1500,0.88,6,10.0,illustrative_unverified
+Hong Kong,PWH,22.3811,114.2023,core,1800,0.96,6,10.0,illustrative_unverified
+Hong Kong,TMH,22.4082,113.9754,core,1900,0.94,6,10.0,illustrative_unverified
+Hong Kong,NDH,22.4965,114.1246,core,1000,0.75,6,10.0,illustrative_unverified
+Hong Kong,AHNH,22.4587,114.1748,core,1200,0.82,6,10.0,illustrative_unverified
+Hong Kong,YCH,22.3705,114.1198,core,1300,0.8,6,10.0,illustrative_unverified
+Hong Kong,POH,22.4462,114.0416,core,900,0.7,6,10.0,illustrative_unverified
+Hong Kong,SYPJC,22.286,114.143,clinic,150,0.25,2,10.0,illustrative_unverified
+Hong Kong,KTJC,22.2825,114.128,clinic,120,0.2,2,10.0,illustrative_unverified
+Hong Kong,SKW GOPC,22.2647,114.2365,clinic,120,0.15,2,10.0,illustrative_unverified
+Hong Kong,WCGOPC,22.276,114.175,clinic,130,0.22,2,10.0,illustrative_unverified
+Hong Kong,CKHC,22.319,114.175,clinic,130,0.22,2,10.0,illustrative_unverified
+Hong Kong,SPK,22.3331,114.1945,clinic,110,0.18,2,10.0,illustrative_unverified
+Hong Kong,KTHC,22.315,114.226,clinic,160,0.24,2,10.0,illustrative_unverified
+Hong Kong,KBHC,22.3258,114.2127,clinic,140,0.2,2,10.0,illustrative_unverified
+Hong Kong,LTHC,22.3085,114.2335,clinic,120,0.19,2,10.0,illustrative_unverified
+Hong Kong,LCH,22.3364,114.1565,clinic,150,0.21,2,10.0,illustrative_unverified
+Hong Kong,YLJCHC,22.4445,114.0251,clinic,180,0.28,2,10.0,illustrative_unverified
+Hong Kong,TMJC,22.3965,113.974,clinic,160,0.25,2,10.0,illustrative_unverified
+Hong Kong,HKC,22.355,114.127,clinic,150,0.23,2,10.0,illustrative_unverified
+Hong Kong,TWHC,22.371,114.116,clinic,140,0.22,2,10.0,illustrative_unverified
+Hong Kong,LYGOPC,22.386,114.1902,clinic,130,0.2,2,10.0,illustrative_unverified
+Hong Kong,MOSH,22.4255,114.2311,clinic,120,0.18,2,10.0,illustrative_unverified
+Hong Kong,TPO,22.451,114.165,clinic,130,0.19,2,10.0,illustrative_unverified
+Hong Kong,FHL,22.4925,114.138,clinic,110,0.15,2,10.0,illustrative_unverified
+Japan,UTokyo_Hosp,35.7118,139.7653,core,1200,0.98,6,10.0,illustrative_unverified
+Japan,Keio_Hosp,35.683,139.718,core,1000,0.95,6,10.0,illustrative_unverified
+Japan,StLukes,35.6669,139.7766,core,520,0.92,6,10.0,illustrative_unverified
+Japan,TMDU_Hosp,35.7027,139.7645,core,800,0.9,6,10.0,illustrative_unverified
+Japan,Juntendo,35.7025,139.7617,core,1050,0.93,6,10.0,illustrative_unverified
+Japan,Hiroo_Hosp,35.6455,139.7197,core,450,0.85,6,10.0,illustrative_unverified
+Japan,Toranomon,35.6685,139.7479,core,850,0.88,6,10.0,illustrative_unverified
+Japan,NCGM,35.7001,139.717,core,780,0.89,6,10.0,illustrative_unverified
+Japan,Shinjuku_Clinic,35.6938,139.7034,clinic,150,0.25,2,10.0,illustrative_unverified
+Japan,Shibuya_Clinic,35.658,139.7016,clinic,120,0.2,2,10.0,illustrative_unverified
+Japan,Minato_Clinic,35.6585,139.7454,clinic,130,0.22,2,10.0,illustrative_unverified
+Japan,Chiyoda_Clinic,35.694,139.7536,clinic,140,0.24,2,10.0,illustrative_unverified
+Japan,Shinagawa_Clinic,35.6091,139.7302,clinic,160,0.28,2,10.0,illustrative_unverified
+Japan,Meguro_Clinic,35.6415,139.6981,clinic,110,0.18,2,10.0,illustrative_unverified
+Japan,Taito_Clinic,35.7126,139.7802,clinic,120,0.19,2,10.0,illustrative_unverified
+Japan,Nakano_Clinic,35.7058,139.6655,clinic,130,0.21,2,10.0,illustrative_unverified
