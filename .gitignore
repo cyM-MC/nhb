@@ -7,3 +7,4 @@ results/*
 legacy_outputs/
 .DS_Store
 realdata/
+PAPER_RESULTS.md
