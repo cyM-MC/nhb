@@ -19,7 +19,7 @@ from environment import apply_disaster_friction
 
 
 COLORS = {'Baseline': '#c44e52', 'Full': '#4c72b0', 'Friction': '#dd8452',
-          'Exposure': '#55a868', 'Fastest': '#8172b3'}
+          'Exposure': '#55a868', 'Fastest': '#8172b3', 'Adaptive': '#168b89'}
 
 
 def save_figure(fig, output, name):

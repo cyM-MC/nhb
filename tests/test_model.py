@@ -170,14 +170,14 @@ class ModelTests(unittest.TestCase):
             for file in ('decisions.csv', 'run_summary.csv', 'paired_effects.csv'):
                 self.assertEqual((output / file).read_bytes(), (second / file).read_bytes())
             decisions = pd.read_csv(output / 'decisions.csv')
-            self.assertEqual(len(decisions), config.n_agents * len(config.seeds) * 5)
+            self.assertEqual(len(decisions), config.n_agents * len(config.seeds) * len(config.scenarios))
             for _, group in decisions.groupby('seed'):
                 base = group.loc[group['scenario'] == 'Baseline'].drop(columns='scenario').reset_index(drop=True)
                 for scenario in ('Full', 'Friction', 'Exposure'):
                     other = group.loc[group['scenario'] == scenario].drop(columns='scenario').reset_index(drop=True)
                     assert_frame_equal(base, other)
             effects = pd.read_csv(output / 'paired_effects.csv')
-            null_effects = effects.loc[effects['comparison'] != 'Fastest', 'delta'].dropna()
+            null_effects = effects.loc[~effects['comparison'].isin(['Fastest', 'Adaptive']), 'delta'].dropna()
             np.testing.assert_allclose(null_effects, 0, atol=1e-12)
             summary = pd.read_csv(output / 'run_summary.csv')
             shuffled = paired_effects(summary.sample(frac=1, random_state=1), config)

@@ -2,6 +2,8 @@ __pycache__/
 *.py[cod]
 .venv/
 cache/
-results/
+results/*
+!results/osm_paper/
 legacy_outputs/
 .DS_Store
+realdata/

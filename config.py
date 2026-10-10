@@ -36,6 +36,9 @@ class ExperimentConfig:
     access_target_min: float = 60.0
     bootstrap_samples: int = 2000
     analysis_seed: int = 2026
+    recommendation_min_gain_min: float = 5.0
+    recommendation_max_detour_min: float = 10.0
+    recommendation_compliance: float = 0.8
 
     def __post_init__(self):
         for name in ('seeds', 'stress_levels', 'severity_levels'):
@@ -63,7 +66,8 @@ class ExperimentConfig:
                      'departure_window_min', 'access_target_min', 'service_rate_multiplier'):
             if not math.isfinite(getattr(self, name)) or getattr(self, name) <= 0:
                 raise ValueError(f"{name} must be finite and positive")
-        for name in ('gamma', 'temperature', 'threshold_low', 'threshold_high', 'exposure'):
+        for name in ('gamma', 'temperature', 'threshold_low', 'threshold_high', 'exposure',
+                     'recommendation_min_gain_min', 'recommendation_max_detour_min'):
             if not math.isfinite(getattr(self, name)) or getattr(self, name) < 0:
                 raise ValueError(f"{name} must be finite and non-negative")
         if self.threshold_high <= self.threshold_low:
@@ -72,6 +76,8 @@ class ExperimentConfig:
             raise ValueError("Friction must be in [0,1]")
         if not math.isfinite(self.requires_core_fraction) or not 0 <= self.requires_core_fraction <= 1:
             raise ValueError("requires_core_fraction must be in [0,1]")
+        if not math.isfinite(self.recommendation_compliance) or not 0 <= self.recommendation_compliance <= 1:
+            raise ValueError('Recommendation compliance must be in [0,1]')
         if self.closure_intensity is not None and not 0 < self.closure_intensity <= 1:
             raise ValueError("Closure threshold must be in (0,1]")
         lat, lon = self.hazard_center
@@ -93,4 +99,5 @@ class ExperimentConfig:
             ('Friction', self.friction, 1.0, False),
             ('Exposure', 1.0, self.exposure, False),
             ('Fastest', 1.0, 1.0, True),
+            ('Adaptive', 1.0, 1.0, False),
         )

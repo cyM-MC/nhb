@@ -31,6 +31,24 @@ python main.py --plot-only results/demo --maps
 
 ## 核心代码
 
+### 容量感知推荐与 OSM 双地区实验
+
+新增 `Adaptive` 情景，保留 Baseline、Full、Friction、Exposure、Fastest。它先生成患者无干预选择，再按出发时刻（同刻按 agent_id）处理推荐，依据此前患者已经承诺的到达时刻预测 FCFS 等待。只能查看过去决策，不能查看未来出发患者或最终实现的等待。预计总耗时至少减少 5 分钟、额外出行不超过 10 分钟且符合临床类型时，80% 的患者接受推荐；每次决策更新预约表。未来患者可能更早到达，最终排队统一按实际到达时间重算，因此推荐不保证每人获益。假设所有患者原始选择均可被平台观察、无背景流量、无取消，设施与出行时间信息准确；这属于理想信息条件。
+
+参数为 `recommendation_min_gain_min`、`recommendation_max_detour_min`、`recommendation_compliance`，可通过 JSON 修改。正文结果只涵盖默认信息与遵从条件，不能声称对信息误差稳健。
+
+本轮只用 OpenStreetMap 香港及东京 23 区驾驶路网，不使用 `realdata` 日本轨迹。患者在节点均匀抽样，医院表仍为未核实示例。预设网格：每地区 200/1000/2000 名患者、120 分钟出发窗口、压力 6、灾害强度 0/1/3、种子 32–36，每设置六情景。需求水平不是实测患者数量。每次运行保存路网及代码快照和输入哈希。
+
+```bash
+# region 依次为 Japan、'Hong Kong'；agents 依次为 200、1000、2000
+python main.py --region Japan --agents 1000 --seeds 32 33 34 35 36 --stress 6 --severity 0 1 3 --output results/osm_japan_1000
+python main.py --region 'Hong Kong' --agents 1000 --seeds 32 33 34 35 36 --stress 6 --severity 0 1 3 --output results/osm_hk_1000
+# 完成六个目录后导出完整正文图及配对指标
+python paper_results.py
+```
+
+导出见 `results/osm_paper/`：完整种子指标、全网格配对效应、PNG/SVG/PDF 图和来源记录。配对 bootstrap 区间仅代表五种子 Monte Carlo 波动；不可作为真实患者的实证置信区间。轻载、高载和负面结果全部报告。论文正式结论还需要服务能力校准、人口起点权重、信息误差、遵从率、更多种子和独立验证。
+
 - `config.py`：实验设计、默认参数与校验。
 - `environment.py`：医院数据、OSM 路网、灾害情景、反向最短路、离线沙盘。
 - `decision.py`：无量纲效用、压力权重、设施可选集合。
@@ -119,7 +137,20 @@ access = travel_time + wait  # 从出发到开始服务，不包括本人的诊�
 
 ## 数据与可复现性
 
-`data/facilities.csv` 沿用旧代码的名称、近似坐标、吸引力大小和声望参数，`source_status=illustrative_unverified`。**这些值并未核实为真实医院容量或患者偏好。** 新加的服务台数（医院 6、诊所 2）与服务时长（10 分钟）同样是示例。`attraction_size` 只是效用代理变量，不能当作每小时服务能力；服务台与服务时长需独立估计。
+### OSM 双地区验证
+
+```bash
+# region 依次为 Japan、'Hong Kong'；agents 依次为 200、1000、2000
+python main.py --region Japan --agents 1000 --seeds 32 33 34 35 36 --stress 6 --severity 0 1 3 --output results/osm_japan_1000
+python main.py --region 'Hong Kong' --agents 1000 --seeds 32 33 34 35 36 --stress 6 --severity 0 1 3 --output results/osm_hk_1000
+python paper_results.py
+```
+
+这组实验使用 OpenStreetMap 驾驶路网，当前正文只报告香港和东京 23 区的仿真结果，不使用 `realdata` 日本地铁轨迹。患者在路网节点上均匀抽样，医院表仍为未核实示例。预设网格为每地区 200/1000/2000 名患者、120 分钟出发窗口、压力 6、灾害强度 0/1/3、种子 32–36，每个设置共六个情景。需求水平不是实测患者数量。
+
+`results/osm_paper/` 保存完整种子指标、全网格配对效应、PNG/SVG/PDF 图和来源记录。配对 bootstrap 区间仅代表五种子 Monte Carlo 波动；不可作为真实患者的实证置信区间。轻载、高载和负面结果都应报告。正式研究仍需要服务能力校准、人口起点权重、信息误差、遵从率、更多种子和独立验证。
+
+`data/facilities.csv` 沿用旧代码的名称、近似坐标、吸引力大小和声望参数，`source_status=illustrative_unverified`。这些值并未核实为真实医院容量或患者偏好。新增的服务台数（医院 6、诊所 2）与服务时长（10 分钟）同样是示例。`attraction_size` 只是效用代理变量，不能当作每小时服务能力；服务台与服务时长需独立估计。
 
 正式研究需要补充带来源与日期的设施服务范围、到达过程、实际接诊速率、灾害交通时间及行为选择数据。用独立数据估计压力权重、声望、尺度和选择噪声，区分校准数据与验证数据。论文主张应限制为当前数据能够检验的机制。
 

@@ -56,6 +56,10 @@ def run_scenario(population, times, facilities, config, stress, scenario, noise)
     choice, alpha = choose_facilities(
         times, facilities, population['threshold'], stress, population['requires_core'],
         config, friction, exposure, noise, fastest)
+    recommended = np.zeros(len(population), dtype=bool)
+    predicted_gain = np.zeros(len(population))
+    if name == 'Adaptive':
+        choice, recommended, predicted_gain = adaptive_choices(population, times, facilities, choice, config)
     valid = choice >= 0
     n = len(population)
     selected_time = np.full(n, np.nan)
@@ -69,6 +73,8 @@ def run_scenario(population, times, facilities, config, stress, scenario, noise)
     result = population.copy()
     result['scenario'] = name
     result['alpha'] = alpha
+    result['recommendation_accepted'] = recommended
+    result['predicted_gain_min'] = predicted_gain
     for column, output_column in [('name', 'chosen_facility'), ('facility_type', 'facility_type')]:
         values = np.full(n, None, dtype=object)
         values[valid] = facilities[column].to_numpy()[choice[valid]]
@@ -81,3 +87,50 @@ def run_scenario(population, times, facilities, config, stress, scenario, noise)
     result['access_min'] = selected_time + waits  # departure -> start of service
     result['within_target'] = valid & (result['access_min'] <= config.access_target_min)
     return result
+
+
+def adaptive_choices(population, times, facilities, baseline, config):
+    """Online recommendations using only previously committed arrivals.
+
+    Reservation schedules forecast FCFS queues at candidate arrival times. Later
+    departures may arrive earlier: actual waits are recomputed after choices,
+    so predicted benefits are not guaranteed realized benefits.
+    """
+    choices = baseline.copy()
+    accepted = np.zeros(len(choices), dtype=bool)
+    gains = np.zeros(len(choices))
+    bookings = [[] for _ in range(len(facilities))]
+    departures = population.departure_min.to_numpy()
+    ids = population.agent_id.to_numpy()
+    core = facilities.facility_type.to_numpy() == 'core'
+    # Stable agent-specific pseudo-uniform values; identical across all settings.
+    compliance = pd.util.hash_array(ids.astype(np.int64)) / float(2**64)
+    order = np.lexsort((ids, departures))
+    for i in order:
+        original = baseline[i]
+        if original < 0:
+            continue
+        travel = times[i] / 60
+        costs = np.full(len(facilities), np.inf)
+        for j, facility in facilities.iterrows():
+            if not np.isfinite(travel[j]) or (population.requires_core.iloc[i] and not core[j]):
+                continue
+            if travel[j] > travel[original] + config.recommendation_max_detour_min:
+                continue
+            arrival = departures[i] + travel[j]
+            servers = [0.] * int(facility.servers)
+            for booked_arrival, booked_id in sorted(bookings[j]):
+                if (booked_arrival, booked_id) > (arrival, ids[i]):
+                    break
+                free = heapq.heappop(servers)
+                heapq.heappush(servers, max(free, booked_arrival) + facility.service_minutes)
+            costs[j] = travel[j] + max(0., servers[0] - arrival)
+        best = int(costs.argmin())
+        gain = costs[original] - costs[best]
+        if best != original and gain >= config.recommendation_min_gain_min and compliance[i] < config.recommendation_compliance:
+            choices[i] = best
+            accepted[i] = True
+            gains[i] = gain
+        chosen = choices[i]
+        bookings[chosen].append((departures[i] + travel[chosen], ids[i]))
+    return choices, accepted, gains
